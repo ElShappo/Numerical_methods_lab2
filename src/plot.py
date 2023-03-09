@@ -19,18 +19,15 @@ def plot_over_time(foo, scheme, h1=0.01, h2=0.001, courant=0.7):
     last_x_index_base_h1 = math.ceil(l/h1)-1
     last_x_index_base_h2 = math.ceil(l/h2)-1
 
-    print('last index, x_list, h1:', last_x_index_base_h1)
-    print('last index, x_list, h2:', last_x_index_base_h2)
-
     x_list_h1 = []
     x_list_h2 = []
 
-    if (scheme == lax_scheme):
-      x_list_h1 = np.arange(0, l + h1*last_t_index_h1, h1)
-      x_list_h2 = np.arange(0, l + h2*last_t_index_h2, h2)
+    if scheme == lax_scheme:
+        x_list_h1 = np.arange(0, l + h1*last_t_index_h1, h1)
+        x_list_h2 = np.arange(0, l + h2*last_t_index_h2, h2)
     else:
-      x_list_h1 = np.arange(0, l, h1)
-      x_list_h2 = np.arange(0, l, h2)
+        x_list_h1 = np.arange(0, l, h1)
+        x_list_h2 = np.arange(0, l, h2)
 
     fig, ax = plt.subplots(2, figsize=(16, 9))
     camera = Camera(fig)
@@ -66,28 +63,22 @@ def plot_over_time(foo, scheme, h1=0.01, h2=0.001, courant=0.7):
 
         y_list_for_foo = [foo(x, t) for x in x_list_h1]
 
-        error_list_h1 += [max([np.abs(x-y) for x,y in zip(y_list_for_foo, numeric_solution_h1)])]
-        error_list_h2 += [max([np.abs(x-y) for x,y in zip(y_list_for_foo, numeric_solution_h2[::10])])]
+        error_list_h1 += [max([np.abs(x-y) for x, y in zip(y_list_for_foo, numeric_solution_h1)])]
+        error_list_h2 += [max([np.abs(x-y) for x, y in zip(y_list_for_foo, numeric_solution_h2[::10])])]
 
         error_h1 = error_list_h1[i-1]
         error_h2 = error_list_h2[i-1]
-
-        # print('theory:', len(x_list_h1[:last_x_index_base_h1+1]))
-        # print('h1:', len(numeric_solution_h1[:last_x_index_base_h1+1]))
-        # print('h2:', len(numeric_solution_h2[:last_x_index_base_h2+1:10]))
 
         ax[0].plot(x_list_h1[:last_x_index_base_h1+1], y_list_for_foo[:last_x_index_base_h1+1], color='black')
         ax[0].plot(x_list_h1[:last_x_index_base_h1+1], numeric_solution_h1[:last_x_index_base_h1+1], color='red')
         ax[0].plot(x_list_h1[:last_x_index_base_h1+1], numeric_solution_h2[:last_x_index_base_h2+1:10], color='blue')
 
-        # ax[0].annotate(f't = {t}', ha='center', xy=(5, 1.4))
         ax[0].set_ylim(0, 1.2)
-        ax[0].legend([f'Precise, t = {round(t, 2)}', f'h1 = {h1}', f'h2 = {h2}'])
+        ax[0].legend([f'Exact, t = {round(t, 2)}', f'h1 = {h1}', f'h2 = {h2}'])
 
         ax[1].plot(t_list_h1[1:i], error_list_h1[1:i], color='red')
         ax[1].plot(t_list_h1[1:i], error_list_h2[1:i], color='blue')
 
-        # ax[1].set_ylim(0, max(error_h1, error_h2))
         ax[1].annotate(f'eps1/eps2 = {error_h1/error_h2}', ha='center', xy=(0.5, 10))
         ax[1].legend([f'h1 = {h1}, eps1/eps2 = {round(error_h1/error_h2, 2)}', f'h2 = {h2}'])
 
