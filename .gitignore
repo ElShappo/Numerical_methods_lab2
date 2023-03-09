@@ -3,3 +3,4 @@
 precise/
 inprecise/
 .idea
+__pycache__/
